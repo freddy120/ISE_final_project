@@ -6,6 +6,7 @@
 #include "MAX30102.h"
 #include "user_interface.h"
 #include "pc_serial_com.h"
+#include "light_level_control.h"
 
 //=====[Declaration of private defines]========================================
 
@@ -34,6 +35,7 @@ void pulseOximeterSystemInit()
 
     userInterfaceInit();
     pcSerialComInit();
+    lightLevelControlInit();
 }
 
 void pulseOximeterSystemUpdate(){
@@ -55,6 +57,7 @@ void pulseOximeterSystemUpdate(){
 				userInterfaceHRandSp02Init();
 			}
 
+			lightLevelControlUpdate();
 			delay(SYSTEM_TIME_INCREMENT_MS);
 			break;
 		case 1:

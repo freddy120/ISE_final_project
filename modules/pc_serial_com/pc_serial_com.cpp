@@ -5,6 +5,7 @@
 
 #include "pc_serial_com.h"
 #include "date_and_time.h"
+#include "light_level_control.h"
 
 
 //=====[Declaration of private defines]========================================
@@ -37,6 +38,7 @@ static int numberOfCodeChars = 0;
 static int pcSerialComCommandUpdate( char receivedChar );
 
 static void availableCommands();
+static void commandReadPotentiometer();
 static void commandSetDateAndTime();
 static void commandShowDateAndTime();
 
@@ -103,6 +105,7 @@ static int pcSerialComCommandUpdate( char receivedChar )
 {
     switch (receivedChar) {
         case '1': return 1;
+        case 'p': case 'P': commandReadPotentiometer(); return 0;
         case 's': case 'S': commandSetDateAndTime(); return 0;
         case 't': case 'T': commandShowDateAndTime(); return 0;
         default: availableCommands(); return 0;
@@ -113,12 +116,17 @@ static void availableCommands()
 {
     uartUsb.printf( "Available commands:\r\n" );
     uartUsb.printf( "Press '1' Perform HR y SpO2\r\n" );
+    uartUsb.printf( "Press 'p' or 'P' to get Potentiometer percentage \r\n" );
     uartUsb.printf( "Press 's' or 'S' to set the date and time\r\n" );
     uartUsb.printf( "Press 't' or 'T' to get the date and time\r\n" );
     uartUsb.printf( "\r\n" );
 }
 
 
+static void commandReadPotentiometer(){
+	uartUsb.printf("%POT= %.3f \r\n", lightLevelControlRead()*100.0f);
+
+}
 static void commandSetDateAndTime()
 {
 	int year   = 0;
